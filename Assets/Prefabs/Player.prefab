@@ -200,8 +200,8 @@ GameObject:
   - component: {fileID: 5641570376088909625}
   - component: {fileID: 5641570376088909626}
   - component: {fileID: 5641570376088909624}
-  - component: {fileID: 5641570376088909630}
   - component: {fileID: 5641570376088909631}
+  - component: {fileID: 5804346178941613747}
   - component: {fileID: 5641570376088909628}
   - component: {fileID: 5641570376088909629}
   m_Layer: 0
@@ -296,20 +296,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5641570376088909630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5641570376088909627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aadf8b8d4c359c945800dea4c92e7944, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 300
-  angularSpeed: 25
 --- !u!70 &5641570376088909631
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -326,6 +312,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.015}
   m_Size: {x: 0.24, y: 0.29}
   m_Direction: 0
+--- !u!114 &5804346178941613747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5641570376088909627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aadf8b8d4c359c945800dea4c92e7944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 250
+  angularSpeed: 20
+  health: 3
 --- !u!61 &5641570376088909628
 BoxCollider2D:
   m_ObjectHideFlags: 0

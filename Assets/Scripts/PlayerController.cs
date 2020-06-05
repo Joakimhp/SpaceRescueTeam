@@ -11,6 +11,12 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float angularSpeed;
 
+    PlayerData playerData;
+
+    public void SetData(PlayerData data ) {
+        playerData = data;
+    }
+
     private void Awake() {
         hook = GetComponentInChildren<Hook> ();
         hook.Initialize ();
@@ -36,10 +42,15 @@ public class PlayerController : MonoBehaviour
             rb.AddForce ( transform.up * inputSpeed * speed * Time.deltaTime );
         }
 
-            //float inputSpeed = Input.GetAxisRaw ( "Vertical" );
-            //inputSpeed = inputSpeed < 0 ? inputSpeed / 2 : inputSpeed;
+        //float inputSpeed = Input.GetAxisRaw ( "Vertical" );
+        //inputSpeed = inputSpeed < 0 ? inputSpeed / 2 : inputSpeed;
 
-            float torqueToAdd = Input.GetAxisRaw ( "Horizontal" ) * angularSpeed * Time.deltaTime;
-            rb.AddTorque ( torqueToAdd );
+        float torqueToAdd = Input.GetAxisRaw ( "Horizontal" ) * angularSpeed * Time.deltaTime;
+        rb.AddTorque ( torqueToAdd );
+    }
+
+    private void OnCollisionEnter( Collision collision ) {
+        if(collision.gameObject.tag == "Meteor" ) {
         }
     }
+}
