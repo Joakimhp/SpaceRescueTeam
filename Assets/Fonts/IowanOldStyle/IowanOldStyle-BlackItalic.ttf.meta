@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 924a50474c5af4d44868babafdf9a4ee
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Iowan Old Style
+  fontNames:
+  - Iowan Old Style
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 70663564fce644b4d9d91d2f0bd9a997, type: 3}
+  - {fileID: 12800000, guid: 36ae0f8c23862604b9d7bf8bd629aa11, type: 3}
+  - {fileID: 12800000, guid: 3c77c4bc5f0c8ce468ada0b7d57ac509, type: 3}
+  - {fileID: 12800000, guid: 0c26e27f9a6bc21419dfe0372b05b044, type: 3}
+  - {fileID: 12800000, guid: 65da87cfbedd0b54d867e08808d26486, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
