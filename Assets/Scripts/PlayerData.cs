@@ -1,25 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
-
-//[System.Serializable]
-//public class PlayerDataHandler
-//{
-//    public PlayerData playerData;
-
-//    public PlayerDataHandler ( PlayerData player ) {
-//        playerData.health = player.health;
-//        playerData.gunLevel = player.gunLevel;
-//        playerData.bulletSpeed = player.bulletSpeed;
-//        playerData.gold = player.gold;
-//    }
-//}
 
 [System.Serializable]
 public class PlayerData
 {
-    public int health = 0;
-    public int gunLevel = 0;
-    public int bulletSpeed = 0;
+    public int [] upgradeLevels; //health, gun level, bulletSpeed
     public int gold = 0;
+
+    public PlayerData(int upgradesCount) {
+        upgradeLevels = new int [ upgradesCount ];
+        for ( int i = 0; i < upgradeLevels.Length; i++ ) {
+            upgradeLevels [ i ] = 0;
+        }
+    }
+
+    public bool CanBuyForGold(int price) {
+        if(gold > price ) {
+            return true;
+        }
+        return false;
+    }
+
+    public void SubtractGold(int price) {
+        gold -= price;
+        SaveSystem.SavePlayer ( this );
+    }
 }

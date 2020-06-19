@@ -9,13 +9,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: f6a7db7623fe3f446939d8469182f9d3, type: 3}
   m_Name: Upgrades
   m_EditorClassIdentifier: Assembly-CSharp::SOUpgrades
   upgrades:
   - name: Health
-    upgradeDatas: []
-  - name: Bullet
-    upgradeDatas: []
-  - name: BulletSpeed
-    upgradeDatas: []
+    upgradeDatas:
+    - sprite: {fileID: 21300000, guid: 94ad5cb60eb88b240a49dce1fc27145d, type: 3}
+      upgradeCost: 1
+    - sprite: {fileID: 21300000, guid: 873f4a55141f2594f863c2e5085cf253, type: 3}
+      upgradeCost: 1
+    - sprite: {fileID: 21300000, guid: b51975f221ea65b4db2f00ed4d2457f5, type: 3}
+      upgradeCost: 1
+    - sprite: {fileID: 21300000, guid: 9cf204dc35a86ab45b0858f728db7624, type: 3}
+      upgradeCost: 1
+  - name: Gun level
+    upgradeDatas:
+    - sprite: {fileID: 21300000, guid: ad78fd037f47dca4e97a094752a10796, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: 3c379e6e36acd584d86dc5d7f5f56d40, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: 77648f926e39fb6479353c6588ebd7d8, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: ca630ef0b2381e1498f07c846028b12a, type: 3}
+      upgradeCost: 0
+  - name: Bullet speed
+    upgradeDatas:
+    - sprite: {fileID: 21300000, guid: e5cfe887e7266bf46bc00fe28e4fc3c4, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: 1cf651f02886a344b82e4159bf4f5ec0, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: a99694f50e37c9440b15f1de17b686ce, type: 3}
+      upgradeCost: 0
+    - sprite: {fileID: 21300000, guid: f882389c8f37bf347a655e52de9e7db8, type: 3}
+      upgradeCost: 0

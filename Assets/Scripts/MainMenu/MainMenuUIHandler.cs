@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuUIHandler : MonoBehaviour
@@ -11,11 +12,21 @@ public class MainMenuUIHandler : MonoBehaviour
     UpgradeWindowUIHandler upgradeWindowUIHandler;
 
     PlayerData playerData;
+    AsyncOperation async;
 
     private void Awake() {
         playerData = SaveSystem.LoadPlayer ();
-
         Initialize ();
+    }
+
+    private void Start() {
+        StartCoroutine ( LoadSceneASync () );
+    }
+
+    private void Update() {
+        if ( Input.GetKeyDown ( KeyCode.Space ) ) {
+            playerData.gold += 100;
+        }
     }
 
     private void Initialize() {
@@ -27,14 +38,22 @@ public class MainMenuUIHandler : MonoBehaviour
         upgradeWindowButton = buttonsInChildren [ 1 ];
 
         playButton.onClick.AddListener ( () => {
-            ApplicationManager.LoadScene ( "GameScene" );
+            async.allowSceneActivation = true;
+            //ApplicationManager.LoadScene ( "GameScene" );
         } );
 
         upgradeWindowButton.onClick.AddListener ( () => {
-            upgradeWindowUIHandler.Show();
+            upgradeWindowUIHandler.Show ();
         } );
         upgradeWindowUIHandler.Hide ();
+    }
 
-        
+    IEnumerator LoadSceneASync() {
+        async = SceneManager.LoadSceneAsync ( 1 );
+        async.allowSceneActivation = false;
+
+        while ( !async.isDone ) {
+            yield return null;
+        }
     }
 }

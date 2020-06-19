@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,14 +14,19 @@ public class UpgradeWindowUIHandler : UIWindowBehaviour
     SOUpgrades soUpgrades;
     List<UpgradeUIHandler> upgradeObjects;
     GameObject upgradePrefab;
+    TextMeshProUGUI goldText;
 
     public void Initialize( PlayerData playerData ) {
         upgradesLayoutGroupTransform = GetComponentInChildren<VerticalLayoutGroup> ().transform;
         this.playerData = playerData;
 
+        TextMeshProUGUI [] tmpTexts = GetComponentsInChildren<TextMeshProUGUI> ();
+        goldText = tmpTexts [ tmpTexts.Length - 2 ]; 
+            
         soUpgrades = Resources.Load<SOUpgrades> ( "Upgrades" );
         upgradePrefab = Resources.Load<GameObject> ( "UpgradeUI" );
         SetupUpgradeObjects ();
+
     }
 
     private void SetupUpgradeObjects() {
@@ -28,7 +34,9 @@ public class UpgradeWindowUIHandler : UIWindowBehaviour
         for ( int i = 0; i < soUpgrades.upgrades.Count; i++ ) {
             UpgradeUIHandler obj = Instantiate ( upgradePrefab , Vector3.zero , Quaternion.identity , upgradesLayoutGroupTransform ).GetComponent<UpgradeUIHandler>();
             upgradeObjects.Add ( obj );
-            obj.Initialize (); //YOU'RE HERE!!!
+            Upgrade currentUpgrade = soUpgrades.upgrades [ i ];
+
+            obj.Initialize (currentUpgrade, playerData.upgradeLevels[i], playerData, i); 
         }
     }
 
@@ -43,14 +51,9 @@ public class UpgradeWindowUIHandler : UIWindowBehaviour
     }
 
     public override void UpdateUI() {
-        
+        goldText.text = playerData.gold.ToString ();
+        foreach ( UpgradeUIHandler upgrade in upgradeObjects ) {
+            upgrade.UpdateUI ();
+        }
     }
-}
-
-
-public abstract class UIWindowBehaviour : MonoBehaviour
-{
-    public abstract void Show();
-    public abstract void Hide();
-    public abstract void UpdateUI();
 }
