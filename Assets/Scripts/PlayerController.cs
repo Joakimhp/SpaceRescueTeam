@@ -1,30 +1,34 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class PlayerController : MonoBehaviour, IDamagable
 {
-    GameManager gameManager;
-    Hook hook;
-    Gun gun;
+    private GameManager gameManager;
+    private Hook hook;
+    private Gun gun;
 
     private Rigidbody2D rb;
 
     public float speed;
     public float angularSpeed;
 
-    PlayerData playerData;
+    private PlayerData playerData;
 
     public int health;
-    Sprite gunLevelSprite;
+    private Sprite gunLevelSprite;
 
-    Animator animator;
+    [SerializeField]
+    private Animator thrusterAnimator;
+    private Animator spaceshipAnimator;
 
     public void Initialize( GameManager gameManager , PlayerData playerData ) {
         this.gameManager = gameManager;
         this.playerData = playerData;
 
-        animator = GetComponent<Animator> ();
+        spaceshipAnimator = GetComponent<Animator> ();
 
         SOUpgrades upgrades = Resources.Load<SOUpgrades> ( "Upgrades" );
         health = playerData.upgradeLevels [ 0 ] + 1;
@@ -58,6 +62,10 @@ public class PlayerController : MonoBehaviour, IDamagable
 
     private void Move() {
         float inputSpeed = Input.GetAxisRaw ( "Vertical" );
+
+        thrusterAnimator.SetBool ( "PlayerThrottles" , inputSpeed != 0 );
+        thrusterAnimator.SetFloat ( "SpeedInput" , inputSpeed );
+
         if ( inputSpeed == 0 ) {
             Vector3 dampenedVelocity = rb.velocity * -1f * .1f;
             rb.AddForce ( dampenedVelocity );
@@ -72,6 +80,10 @@ public class PlayerController : MonoBehaviour, IDamagable
 
     private void Rotate() {
         float torqueToAdd = Input.GetAxisRaw ( "Horizontal" ) * angularSpeed * Time.deltaTime;
+
+        thrusterAnimator.SetBool ( "PlayerRotates" , torqueToAdd != 0 );
+        thrusterAnimator.SetFloat ( "RotationInput" , torqueToAdd );
+
         rb.AddTorque ( torqueToAdd );
     }
 
@@ -79,9 +91,9 @@ public class PlayerController : MonoBehaviour, IDamagable
         health -= damage;
         if ( health <= 0 ) {
             gameManager.GameOver ( false );
-            animator.Play ( "Base Layer.DestroyPlayer" );
+            spaceshipAnimator.Play ( "Base Layer.DestroyPlayer" );
         } else {
-            animator.Play ( "Base Layer.PlayerTakeDamage" );
+            spaceshipAnimator.Play ( "Base Layer.PlayerTakeDamage" );
             gameManager.UpdateUI ();
         }
     }
