@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class PlayerController : MonoBehaviour, IDamagable
 {
@@ -20,9 +19,11 @@ public class PlayerController : MonoBehaviour, IDamagable
     public int health;
     private Sprite gunLevelSprite;
 
-    [SerializeField]
+    //[SerializeField]
     private Animator thrusterAnimator;
     private Animator spaceshipAnimator;
+
+    private bool isImmune = false;
 
     public void Initialize( GameManager gameManager , PlayerData playerData ) {
         this.gameManager = gameManager;
@@ -43,6 +44,9 @@ public class PlayerController : MonoBehaviour, IDamagable
 
         hook = GetComponentInChildren<Hook> ();
         hook.Initialize ();
+
+        Animator [] animators = GetComponentsInChildren<Animator> ();
+        thrusterAnimator = animators [ animators.Length - 1];
 
         rb = GetComponent<Rigidbody2D> ();
     }
@@ -88,6 +92,10 @@ public class PlayerController : MonoBehaviour, IDamagable
     }
 
     public void TakeDamage( int damage ) {
+        if ( isImmune ) {
+            return;
+        }
+
         health -= damage;
         if ( health <= 0 ) {
             gameManager.GameOver ( false );
@@ -96,16 +104,28 @@ public class PlayerController : MonoBehaviour, IDamagable
             spaceshipAnimator.Play ( "Base Layer.PlayerTakeDamage" );
             gameManager.UpdateUI ();
         }
+        StartCoroutine ( StartImmunityTimer () );
     }
 
+    //Called by animation event
     private void AnimationEventDestroyMe() {
         Destroy ( gameObject );
     }
-
-    private void OnCollisionEnter2D( Collision2D collision ) {
-        //if ( collision.gameObject.tag == "Meteor" ) {
-        //    TakeDamage ( 1 );
-        //}
+    
+    IEnumerator StartImmunityTimer() {
+        isImmune = true;
+        float timer = 1.5f + Time.deltaTime;
+        Debug.Log ( "Starting immune timer" );
+        while ( timer > 0 ) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log ( "Immune timer over" );
+        isImmune = false;
     }
 
+    public void AddForceAwayFromPoint( Vector3 otherPosition ) {
+        Vector3 directionVec = transform.position - otherPosition;
+        rb.AddForce ( directionVec.GetXYVector2 ().normalized * 100f );
+    }
 }

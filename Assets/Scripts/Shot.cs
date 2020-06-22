@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Internal.VR;
 
-public class Shot : MonoBehaviour
+public class Shot : MonoBehaviour, IDestroyable
 {
     SpriteRenderer spriteRenderer;
     float speed;

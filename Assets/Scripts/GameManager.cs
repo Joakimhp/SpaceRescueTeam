@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     UIInGameHandler uiInGameHandler;
 
     private void Awake() {
-        player = GameObject.FindGameObjectWithTag ( "Player" ).GetComponent<PlayerController> ();
+        GameObject playerPrefab = Resources.Load<GameObject> ("Player");
+        player = Instantiate ( playerPrefab , Vector3.zero , Quaternion.identity ).GetComponent<PlayerController>();
+        //player = GameObject.FindGameObjectWithTag ( "Player" ).GetComponent<PlayerController> ();
         player.Initialize ( this , SaveSystem.LoadPlayer () );
 
         uiInGameHandler = GetComponentInChildren<UIInGameHandler> ();

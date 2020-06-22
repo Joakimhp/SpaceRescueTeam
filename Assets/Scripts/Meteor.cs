@@ -5,7 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Meteor : MonoBehaviour, IDamagable
+public class Meteor : MonoBehaviour, IDamagable, IDestroyable
 {
     private int originalSize;
     private int size;
@@ -15,7 +15,7 @@ public class Meteor : MonoBehaviour, IDamagable
     Rigidbody2D rb;
     GameObject meteorPrefab;
 
-    bool isImmune;
+    bool isImmune = false;
 
     public void Initialize( int originalSize , int size , Vector2 direction , GameObject meteorPrefab ) {
         this.originalSize = originalSize;
@@ -27,7 +27,6 @@ public class Meteor : MonoBehaviour, IDamagable
 
         rb = GetComponent<Rigidbody2D> ();
 
-        isImmune = true;
         StartCoroutine ( ImmunityTimer () );
 
         UpdateVelocity ();
@@ -39,11 +38,9 @@ public class Meteor : MonoBehaviour, IDamagable
     }
 
     private void AddDirection( Vector2 newDirection ) {
-        Debug.Log ( "From direction: " + direction );
         direction += newDirection;
         //direction = new Vector2 ( direction.x + newDirection.x , direction.y + newDirection.y );
         direction = direction.normalized;
-        Debug.Log ( "To direction: " + direction );
         UpdateVelocity ();
     }
 
@@ -98,13 +95,19 @@ public class Meteor : MonoBehaviour, IDamagable
         }
 
         if ( collision.tag == "Player" ) {
-            collision.GetComponent<PlayerController> ().TakeDamage ( 1 );
+            PlayerController playerController = collision.GetComponent<PlayerController> ();
+            playerController.TakeDamage ( 1 );
+            playerController.AddForceAwayFromPoint ( transform.position );
+            TakeDamage ( 1 );
         }
 
-        Destroy ( gameObject );
+        if ( collision.tag == "Environment" ) {
+            Destroy ( gameObject );
+        }
     }
 
     IEnumerator ImmunityTimer() {
+        isImmune = true;
         float timer = 1.5f + Time.deltaTime;
 
         while ( timer > 0 ) {
