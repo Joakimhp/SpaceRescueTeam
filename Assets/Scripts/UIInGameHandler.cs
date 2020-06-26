@@ -11,9 +11,9 @@ public class UIInGameHandler : MonoBehaviour
 
     GameOverPanelUIHandler gameOverPanelUIHandler;
 
-    public void Initialize(PlayerController player, List<Transform> npcTransforms) {
+    public void Initialize( PlayerController player , List<Transform> npcTransforms ) {
         UIHealthOverviewUIHandler = GetComponentInChildren<UIHealthOverviewUIHandler> ();
-        UIHealthOverviewUIHandler.Initialize (player);
+        UIHealthOverviewUIHandler.Initialize ( player );
 
         scoreOverviewUIHandler = GetComponentInChildren<ScoreOverviewUIHandler> ();
         scoreOverviewUIHandler.Initialize ( npcTransforms );
@@ -22,16 +22,17 @@ public class UIInGameHandler : MonoBehaviour
         gameOverPanelUIHandler.Initialize ();
     }
 
-    public void ShowGameOverScreen(bool playerWon) {
+    public void ShowGameOverScreen( bool playerWon , int maxScore , int score , int goldEarned ) {
+        string scoreText = score + "/" + maxScore;
         if ( playerWon ) {
-            gameOverPanelUIHandler.ShowWinPanel ();
+            gameOverPanelUIHandler.ShowWinPanel ( scoreText , goldEarned.ToString () );
         } else {
-            gameOverPanelUIHandler.ShowLosePanel ();
+            gameOverPanelUIHandler.ShowLosePanel ( scoreText , goldEarned.ToString () );
         }
     }
 
-    public void UpdateUI(int score) {
+    public void UpdateUI( int score ) {
         UIHealthOverviewUIHandler.UpdateUI ();
-        scoreOverviewUIHandler.UpdateUI (score);
+        scoreOverviewUIHandler.UpdateUI ( score );
     }
 }

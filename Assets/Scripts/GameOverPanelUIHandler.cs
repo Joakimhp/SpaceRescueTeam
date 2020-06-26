@@ -9,6 +9,8 @@ using UnityEngine.WSA;
 public class GameOverPanelUIHandler : UIWindowBehaviour
 {
     TextMeshProUGUI title;
+    TextMeshProUGUI score;
+    TextMeshProUGUI gold;
     Animator animator;
 
     Button [] gameOverButtons;
@@ -18,6 +20,8 @@ public class GameOverPanelUIHandler : UIWindowBehaviour
 
         TextMeshProUGUI [] tmpsTexts = GetComponentsInChildren<TextMeshProUGUI> ();
         title = tmpsTexts [ 0 ];
+        score = tmpsTexts [ 1 ];
+        gold = tmpsTexts [ 2 ];
 
         gameOverButtons = GetComponentsInChildren<Button> ();
 
@@ -51,13 +55,21 @@ public class GameOverPanelUIHandler : UIWindowBehaviour
         }
     }
 
-    public void ShowWinPanel() {
-        title.text = "You win!";
+    public void ShowWinPanel(string scoreText, string goldEarnedText) {
+        string titleText = "You win!";
+        SetText ( titleText , scoreText , goldEarnedText );
         Show ();
     }
-    public void ShowLosePanel() {
-        title.text = "Try again?";
+    public void ShowLosePanel( string scoreText , string goldEarnedText ) {
+        string titleText = "Try again?";
+        SetText ( titleText , scoreText , goldEarnedText );
         Show ();
+    }
+
+    private void SetText(string titleText, string scoreText , string goldEarnedText ) {
+        title.text = titleText;
+        score.text = scoreText;
+        gold.text = goldEarnedText;
     }
 
     public override void UpdateUI() {

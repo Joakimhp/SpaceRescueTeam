@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Xml.Serialization;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityScript.Macros;
 
 public class GameManager : MonoBehaviour
 {
     private PlayerController player;
+    private PlayerData playerData;
     private UIInGameHandler uiInGameHandler;
 
     private MeteorSpawner meteorSpawner;
@@ -22,7 +25,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         GameObject playerPrefab = Resources.Load<GameObject> ( "Player" );
-        Vector3 spawnPosition;
         player = Instantiate ( playerPrefab , Vector3.zero , Quaternion.identity ).GetComponent<PlayerController> ();
 
         scoreKeeper = new ScoreKeeper ();
@@ -42,7 +44,8 @@ public class GameManager : MonoBehaviour
         platformSpawner.Initialize ( npcTransforms , groundSprite );
 
 
-        player.Initialize ( this , SaveSystem.LoadPlayer () );
+        playerData = SaveSystem.LoadPlayer ();
+        player.Initialize ( this , playerData );
         player.transform.position = platformSpawner.GetPlayerSpawnPoint ();
         meteorSpawner = GetComponentInChildren<MeteorSpawner> ();
         meteorSpawner.Initialize ();
@@ -52,48 +55,70 @@ public class GameManager : MonoBehaviour
 
         NPCController [] npcControllers = FindObjectsOfType<NPCController> ();
         foreach ( NPCController npc in npcControllers ) {
-            npc.Initialize (this);
+            npc.Initialize ( this , player.playerData.upgradeLevels[1]);
         }
     }
 
-    public void AddPoints(int pointstoAdd ) {
+    public void AddPointsAndGold( int pointstoAdd , int goldToAdd ) {
         scoreKeeper.BumpScore ( pointstoAdd );
+        scoreKeeper.BumpGold ( goldToAdd );
         UpdateUI ();
         if ( CheckForGameOver () ) {
-            platformSpawner.ActivateEndBeam();
+            platformSpawner.ActivateEndBeam ();
         }
     }
 
     public void GameOver( bool playerWon ) {
         UpdateUI ();
-        uiInGameHandler.ShowGameOverScreen ( playerWon );
+        if ( !playerWon ) {
+            scoreKeeper.BumpGold ( -( scoreKeeper.GetGold() / 2 ) );
+        }
+
+        playerData.gold += scoreKeeper.GetGold ();
+        SaveSystem.SavePlayer ( playerData );
+        
+        uiInGameHandler.ShowGameOverScreen ( playerWon , npcSpawner.GetAmountOfNPCs () , scoreKeeper.GetScore () , scoreKeeper.GetGold () );
     }
 
     private bool CheckForGameOver() {
-        if (scoreKeeper.GetScore() >= npcSpawner.GetAmountOfNPCs () ) {
+        if ( scoreKeeper.GetScore () >= npcSpawner.GetAmountOfNPCs () ) {
             return true;
         }
         return false;
     }
-    
+
     public void UpdateUI() {
-        uiInGameHandler.UpdateUI (scoreKeeper.GetScore());
+        uiInGameHandler.UpdateUI ( scoreKeeper.GetScore () );
     }
 }
 
 public class ScoreKeeper
 {
-    public int score;
+    private int score;
+    private int goldEarned;
 
     public ScoreKeeper() {
         score = 0;
+        goldEarned = 0;
     }
 
     public int GetScore() {
         return score;
     }
 
-    public void BumpScore(int bumpAmount) {
+    public int GetGold() {
+        return goldEarned;
+    }
+
+    public void BumpScore( int bumpAmount ) {
         score += bumpAmount;
+    }
+
+    public void BumpGold( int bumpAmount ) {
+        if ( goldEarned + bumpAmount < 0 ) {
+            goldEarned = 0;
+        } else {
+            goldEarned += bumpAmount;
+        }
     }
 }

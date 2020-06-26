@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class NPCController : MonoBehaviour
 {
-    SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
-    GameManager gameManager;
+    private GameManager gameManager;
 
-    public void Initialize(GameManager gameManager) {
+    private int baseGoldOnCollection = 10;
+    private int goldOnCollection;
+
+    public void Initialize( GameManager gameManager , int goldCollectionModifier ) {
         this.gameManager = gameManager;
+        this.goldOnCollection = baseGoldOnCollection + ( 1 * goldCollectionModifier );
 
         spriteRenderer = GetComponent<SpriteRenderer> ();
 
@@ -24,7 +28,7 @@ public class NPCController : MonoBehaviour
     }
 
     public void AddPointToScore() {
-        gameManager.AddPoints (1);
+        gameManager.AddPointsAndGold ( 1 , goldOnCollection );
         Destroy ( gameObject );
     }
 }

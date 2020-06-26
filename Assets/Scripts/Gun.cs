@@ -24,7 +24,6 @@ public class Gun : Tool
         //gunSprite = GetComponent<SpriteRenderer> ();
         SpriteRenderer [] sprts = GetComponentsInChildren<SpriteRenderer> ();
         gunSprite = sprts [ 0 ];
-        print ( gunSprite.color );
         gunSprite.color = Color.red;
     }
 

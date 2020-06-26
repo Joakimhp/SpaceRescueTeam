@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour, IDamagable
     public float speed;
     public float angularSpeed;
 
-    private PlayerData playerData;
+    public PlayerData playerData;
 
     public int health;
     private Sprite gunLevelSprite;
@@ -135,7 +135,10 @@ public class PlayerController : MonoBehaviour, IDamagable
     private void OnTriggerStay2D( Collider2D collision ) {
         if ( collision.gameObject.tag == "FinishArea" ) {
             if ( rb.velocity.magnitude < 0.01f ) {
-                gameManager.GameOver ( true );
+                if ( collision.gameObject.activeSelf == true ) {
+                    collision.gameObject.SetActive ( false );
+                    gameManager.GameOver ( true );
+                }
             }
         }
     }

@@ -71,7 +71,6 @@ public class PlatformSpawner : MonoBehaviour
     public Vector3 GetPlayerSpawnPoint() {
         Transform[] tmpTransforms = platform.GetComponentsInChildren<Transform> ();
         Transform playerSpawnPoint = tmpTransforms [ tmpTransforms.Length - 1 ];
-        Debug.Log(playerSpawnPoint.gameObject.name);
         return playerSpawnPoint.position;
     }
 
