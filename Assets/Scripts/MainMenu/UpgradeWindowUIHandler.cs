@@ -36,7 +36,7 @@ public class UpgradeWindowUIHandler : UIWindowBehaviour
             upgradeObjects.Add ( obj );
             Upgrade currentUpgrade = soUpgrades.upgrades [ i ];
 
-            obj.Initialize (currentUpgrade, playerData.upgradeLevels[i], playerData, i); 
+            obj.Initialize (currentUpgrade, playerData.upgradeLevels[i], playerData, i, this); 
         }
     }
 

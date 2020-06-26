@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
 
@@ -12,14 +14,23 @@ public class Gun : Tool
     private Sprite shotSprite;
     private GameObject shotPrefab;
 
-    float cooldown = .3f;
-    float cooldownTimer;
+    private float cooldown = .3f;
+    private float cooldownTimer;
     public void Initialize( Sprite sprite , float shotSpeedLevel ) {
         shotSprite = sprite;
         shotPrefab = Resources.Load<GameObject> ( "ShotPrefab" );
         shotSpeed = shotBaseSpeed + ( shotSpeedModifier * shotSpeedLevel );
 
-        gunSprite = GetComponent<SpriteRenderer> ();
+        //gunSprite = GetComponent<SpriteRenderer> ();
+        SpriteRenderer [] sprts = GetComponentsInChildren<SpriteRenderer> ();
+        gunSprite = sprts [ 0 ];
+        gunSprite.color = Color.red;
+    }
+
+    private void Update() {
+        if ( Input.GetKeyDown ( KeyCode.C ) ) {
+            gunSprite.color = Color.red;
+        }
     }
 
     public override void UseTool() {
@@ -34,7 +45,8 @@ public class Gun : Tool
     IEnumerator StartCooldownTimer() {
         cooldownTimer = cooldown;
         while ( cooldownTimer > 0f ) {
-            gunSprite.color = Vector4.Lerp ( Color.white , Color.red , cooldownTimer / cooldown );
+            Vector4 newColor = Vector4.Lerp ( Color.white , Color.red , cooldownTimer / cooldown );
+            gunSprite.material.color = newColor;
             cooldownTimer -= Time.deltaTime;
             yield return new WaitForEndOfFrame ();
         }

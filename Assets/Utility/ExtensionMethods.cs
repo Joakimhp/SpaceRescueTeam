@@ -97,7 +97,7 @@ public static class ExtensionMethods {
 		for ( int i = 0 ; i < targets.Count ; i++ ) {
 			if ( targets [i].transform == transform ) {
 				targets.RemoveAt ( i );
-				i--;
+				break;
 			}
 		}
 
