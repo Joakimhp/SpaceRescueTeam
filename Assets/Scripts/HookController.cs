@@ -67,9 +67,18 @@ public class HookController : MonoBehaviour
             ResetHook ();
         }
         if ( hookState == HookState.IN_USE ) {
-            if ( collision.gameObject.tag == "NPC" ) {
-                collision.GetComponent<NPCController> ().ChildToTransform ( transform );
-            } else if ( collision.gameObject.tag != "Player" ) {
+            //Debug.Log ( "I've hit: " + collision.gameObject.name );
+            //if ( collision.gameObject.tag == "NPC" ) {
+            //    collision.GetComponent<NPCController> ().ChildToTransform ( transform );
+            //} else if ( collision.gameObject.tag != "Player" && collision.GetComponent<ObjectDestroyer>() == null ) {
+            //    StopAllCoroutines ();
+            //    StartCoroutine ( ReturnHook () );
+            //}
+
+            if ( collision.tag != "Player" && collision.GetComponent<ObjectDestroyer> () == null ) {
+                if ( collision.gameObject.tag == "NPC" ) {
+                    collision.GetComponent<NPCController> ().ChildToTransform ( transform );
+                }
                 StopAllCoroutines ();
                 StartCoroutine ( ReturnHook () );
             }

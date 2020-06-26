@@ -18,7 +18,7 @@ public class PlayerData
     }
 
     public bool CanBuyForGold(int price) {
-        if(gold > price ) {
+        if(gold - price >= 0) {
             return true;
         }
         return false;

@@ -23,12 +23,6 @@ public class MainMenuUIHandler : MonoBehaviour
         StartCoroutine ( LoadSceneASync () );
     }
 
-    private void Update() {
-        if ( Input.GetKeyDown ( KeyCode.Space ) ) {
-            playerData.gold += 100;
-        }
-    }
-
     private void Initialize() {
         upgradeWindowUIHandler = GetComponentInChildren<UpgradeWindowUIHandler> ();
         upgradeWindowUIHandler.Initialize ( playerData );

@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class UpgradeUIHandler : UIWindowBehaviour
 {
-    Image upgradeImage;
-    TextMeshProUGUI upgradeName;
-    TextMeshProUGUI upgradeLevel;
-    Button buyButton;
+    private Image upgradeImage;
+    private TextMeshProUGUI upgradeName;
+    private TextMeshProUGUI upgradeLevel;
+    private Button buyButton;
 
-    Upgrade myUpgrade;
-    int currentLevelIndex;
+    private Upgrade myUpgrade;
+    private int currentLevelIndex;
+    private int buyUpgradePrice;
 
     PlayerData playerData;
 
@@ -22,7 +23,7 @@ public class UpgradeUIHandler : UIWindowBehaviour
         throw new System.NotImplementedException ();
     }
 
-    public void Initialize( Upgrade upgrade , int currentLevelIndex , PlayerData playerData , int upgradeIndex ) {
+    public void Initialize( Upgrade upgrade , int currentLevelIndex , PlayerData playerData , int upgradeIndex , UpgradeWindowUIHandler upgradeWindowUIHandler ) {
         Image [] tmpImages = GetComponentsInChildren<Image> ();
         upgradeImage = tmpImages [ 2 ];
 
@@ -31,18 +32,21 @@ public class UpgradeUIHandler : UIWindowBehaviour
         upgradeLevel = tmpTexts [ 1 ];
 
         this.playerData = playerData;
+        buyUpgradePrice = upgrade.upgradeDatas [ currentLevelIndex ].upgradeCost;
+
         buyButton = GetComponentInChildren<Button> ();
 
         buyButton.onClick.AddListener ( () => {
             if ( playerData.upgradeLevels [ upgradeIndex ] < myUpgrade.upgradeDatas.Count - 1 ) {
 
-                int priceToPay = upgrade.upgradeDatas [ currentLevelIndex ].upgradeCost;
-                if ( playerData.CanBuyForGold ( priceToPay ) ) {
+                buyUpgradePrice = upgrade.upgradeDatas [ this.currentLevelIndex ].upgradeCost;
+                if ( playerData.CanBuyForGold ( buyUpgradePrice ) ) {
                     playerData.upgradeLevels [ upgradeIndex ]++;
                     SetCurrentLevelIndex ( playerData.upgradeLevels [ upgradeIndex ] );
-                    playerData.SubtractGold ( priceToPay );
+                    playerData.SubtractGold ( buyUpgradePrice );
+                    upgradeWindowUIHandler.UpdateUI ();
                 }
-                
+
                 UpdateUI ();
             }
         } );
@@ -57,6 +61,11 @@ public class UpgradeUIHandler : UIWindowBehaviour
 
     public override void UpdateUI() {
         upgradeImage.sprite = myUpgrade.upgradeDatas [ currentLevelIndex ].sprite;
+        if ( playerData.CanBuyForGold ( buyUpgradePrice ) ) {
+            buyButton.interactable = true;
+        } else {
+            buyButton.interactable = false;
+        }
         upgradeName.text = myUpgrade.name;
         upgradeLevel.text = ( currentLevelIndex + 1 ).ToString () + "/" + myUpgrade.upgradeDatas.Count.ToString ();
         buyButton.GetComponentInChildren<TextMeshProUGUI> ().text = "Buy\n" + myUpgrade.upgradeDatas [ currentLevelIndex ].upgradeCost;
