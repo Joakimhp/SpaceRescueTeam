@@ -11,11 +11,15 @@ public class Meteor : MonoBehaviour, IDamagable, IDestroyable
     private int size;
     private Vector2 direction;
     private float speed = 40f;
+    [SerializeField]
+    private float maxRandomTorque;
 
     Rigidbody2D rb;
     GameObject meteorPrefab;
 
     bool isImmune = false;
+
+    private bool waitingToBeDestroyed = false;
 
     public void Initialize( int originalSize , int size , Vector2 direction , GameObject meteorPrefab ) {
         this.originalSize = originalSize;
@@ -30,6 +34,12 @@ public class Meteor : MonoBehaviour, IDamagable, IDestroyable
         StartCoroutine ( ImmunityTimer () );
 
         UpdateVelocity ();
+        ApplyRandomRotation ();
+    }
+
+    private void ApplyRandomRotation() {
+        float torqueToAdd = Random.Range ( -maxRandomTorque , maxRandomTorque );
+        rb.AddTorque ( torqueToAdd );
     }
 
     private void UpdateVelocity() {
@@ -45,21 +55,28 @@ public class Meteor : MonoBehaviour, IDamagable, IDestroyable
     }
 
     public void TakeDamage( int damage ) {
+        if ( waitingToBeDestroyed ) {
+            return;
+        }
+        
         int newMeteorCount = size - damage;
         if ( newMeteorCount > 0 ) {
             for ( int i = 0; i <= newMeteorCount; i++ ) {
+                Meteor newMeteor = Instantiate ( meteorPrefab , transform.position , Quaternion.identity ).GetComponent<Meteor> ();
                 Vector2 newDirection = Random.insideUnitCircle.normalized;
-                Meteor newMeteor = Instantiate ( gameObject , transform.position , Quaternion.identity ).GetComponent<Meteor> ();
+                if ( !newMeteor.GetComponent<Collider2D> ().enabled )
+                    Debug.Log ( "It's a me" );
                 newMeteor.Initialize ( originalSize , size - 1 , newDirection , meteorPrefab );
             }
         }
 
+        waitingToBeDestroyed = true ;
         Destroy ( gameObject );
     }
 
     private void ImpactWithOtherMeteor( Meteor otherMeteor ) {
-        otherMeteor.TakeDamage ( size );
-        TakeDamage ( otherMeteor.size );
+        otherMeteor.TakeDamage ( 2 );
+        TakeDamage ( 2 );
     }
 
     //private void OnTriggerStay2D( Collider2D collision ) {

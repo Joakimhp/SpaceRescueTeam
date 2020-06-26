@@ -24,7 +24,14 @@ public class Gun : Tool
         //gunSprite = GetComponent<SpriteRenderer> ();
         SpriteRenderer [] sprts = GetComponentsInChildren<SpriteRenderer> ();
         gunSprite = sprts [ 0 ];
-        Debug.Log ( gunSprite.gameObject.name );
+        print ( gunSprite.color );
+        gunSprite.color = Color.red;
+    }
+
+    private void Update() {
+        if ( Input.GetKeyDown ( KeyCode.C ) ) {
+            gunSprite.color = Color.red;
+        }
     }
 
     public override void UseTool() {
@@ -38,15 +45,12 @@ public class Gun : Tool
 
     IEnumerator StartCooldownTimer() {
         cooldownTimer = cooldown;
-        Debug.Log ( "Cooldown" );
         while ( cooldownTimer > 0f ) {
             Vector4 newColor = Vector4.Lerp ( Color.white , Color.red , cooldownTimer / cooldown );
-            gunSprite.color = newColor;
-            Debug.Log ( gunSprite.color );
+            gunSprite.material.color = newColor;
             cooldownTimer -= Time.deltaTime;
             yield return new WaitForEndOfFrame ();
         }
-        Debug.Log ( "Cooled down" );
         cooldownTimer = 0f;
     }
 }

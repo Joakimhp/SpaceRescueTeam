@@ -8,6 +8,7 @@ TagManager:
   - Meteor
   - Environment
   - Borders
+  - FinishArea
   layers:
   - Default
   - TransparentFX

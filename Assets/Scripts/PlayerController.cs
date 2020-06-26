@@ -19,11 +19,11 @@ public class PlayerController : MonoBehaviour, IDamagable
     public int health;
     private Sprite gunLevelSprite;
 
-    //[SerializeField]
     private Animator thrusterAnimator;
     private Animator spaceshipAnimator;
 
     private bool isImmune = false;
+
 
     public void Initialize( GameManager gameManager , PlayerData playerData ) {
         this.gameManager = gameManager;
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, IDamagable
         hook.Initialize ();
 
         Animator [] animators = GetComponentsInChildren<Animator> ();
-        thrusterAnimator = animators [ animators.Length - 1];
+        thrusterAnimator = animators [ animators.Length - 1 ];
 
         rb = GetComponent<Rigidbody2D> ();
     }
@@ -59,7 +59,9 @@ public class PlayerController : MonoBehaviour, IDamagable
         if ( Input.GetKey ( KeyCode.E ) ) {
             gun.UseTool ();
         }
+    }
 
+    private void FixedUpdate() {
         Move ();
         Rotate ();
     }
@@ -111,21 +113,30 @@ public class PlayerController : MonoBehaviour, IDamagable
     private void AnimationEventDestroyMe() {
         Destroy ( gameObject );
     }
-    
+
     IEnumerator StartImmunityTimer() {
         isImmune = true;
+        spaceshipAnimator.SetBool ( "Immune" , isImmune );
         float timer = 1.5f + Time.deltaTime;
-        Debug.Log ( "Starting immune timer" );
         while ( timer > 0 ) {
             timer -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log ( "Immune timer over" );
         isImmune = false;
+        spaceshipAnimator.SetBool ( "Immune" , isImmune );
     }
 
     public void AddForceAwayFromPoint( Vector3 otherPosition ) {
         Vector3 directionVec = transform.position - otherPosition;
         rb.AddForce ( directionVec.GetXYVector2 ().normalized * 100f );
+    }
+
+
+    private void OnTriggerStay2D( Collider2D collision ) {
+        if ( collision.gameObject.tag == "FinishArea" ) {
+            if ( rb.velocity.magnitude < 0.01f ) {
+                gameManager.GameOver ( true );
+            }
+        }
     }
 }
